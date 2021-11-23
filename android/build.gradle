@@ -1,22 +1,16 @@
 
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.1'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
 
 def safeExtGet(prop, fallback) {
     rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+def kotlinVersion = rootProject.ext.get("RNNKotlinVersion")
+def kotlinStdlib = safeExtGet('RNNKotlinStdlib', 'kotlin-stdlib-jdk8')
+
 
 android {
      compileSdkVersion safeExtGet('compileSdkVersion', 28)
@@ -24,7 +18,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
     defaultConfig {
         minSdkVersion safeExtGet('minSdkVersion', 16)
         targetSdkVersion safeExtGet('targetSdkVersion', 28)
@@ -42,6 +38,8 @@ repositories {
 
 
 dependencies {
+    implementation "androidx.core:core-ktx:1.3.0"
+    implementation "org.jetbrains.kotlin:$kotlinStdlib:$kotlinVersion"
     implementation 'com.tom-roush:pdfbox-android:1.8.10.3'
     implementation 'com.facebook.react:react-native:+'
 }

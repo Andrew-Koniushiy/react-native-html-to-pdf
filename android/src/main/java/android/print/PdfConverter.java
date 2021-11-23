@@ -5,6 +5,9 @@
 
 package android.print;
 
+import static com.christopherdro.htmltopdf.UtilsKt.savePdfPostQ;
+import static com.christopherdro.htmltopdf.UtilsKt.savePdfPreQ;
+
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
@@ -76,7 +79,13 @@ public class PdfConverter implements Runnable {
                                 if (mShouldEncode) {
                                     base64 = encodeFromFile(mPdfFile);
                                 }
-
+    
+                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q){
+                                    savePdfPreQ(mContext, mPdfFile);
+                                }else{
+                                    savePdfPostQ(mContext, mPdfFile);
+                                }
+                                
                                 PDDocument myDocument = PDDocument.load(mPdfFile);
                                 int pagesToBePrinted = myDocument.getNumberOfPages();
 
